@@ -1,10 +1,10 @@
 package com.huawei.frs.client;
 
-import com.huawei.frs.common.FrsConstant;
-import com.huawei.frs.common.ProxyHostInfo;
 import com.huawei.frs.access.FrsAccess;
 import com.huawei.frs.access.FrsAccessWithProxy;
 import com.huawei.frs.common.AuthInfo;
+import com.huawei.frs.common.FrsConstant;
+import com.huawei.frs.common.ProxyHostInfo;
 
 public class FrsClient implements AutoCloseable {
     private AuthInfo authInfo;

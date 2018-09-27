@@ -1,7 +1,6 @@
 package com.huawei.frs.utils;
 
 import com.huawei.frs.common.*;
-import com.huaweicloud.frs.common.*;
 
 import java.util.List;
 

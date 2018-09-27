@@ -3,7 +3,6 @@ package com.huawei.frs.client;
 import com.alibaba.fastjson.JSONObject;
 import com.huawei.frs.access.FrsAccess;
 import com.huawei.frs.common.*;
-import com.huaweicloud.frs.common.*;
 import com.huawei.frs.result.SearchFaceResult;
 import com.huawei.frs.utils.HttpResponseUtils;
 import okhttp3.MediaType;

@@ -3,7 +3,6 @@ package com.huawei.frs.demo;
 
 import com.huawei.frs.client.FrsClient;
 import com.huawei.frs.result.*;
-import com.huaweicloud.frs.result.*;
 
 public class FrsSdkDemo {
 

@@ -1,7 +1,7 @@
 package com.huawei.frs.result;
 
-import com.huawei.frs.utils.StringUtils;
 import com.huawei.frs.common.DetectFace;
+import com.huawei.frs.utils.StringUtils;
 
 import java.util.List;
 
