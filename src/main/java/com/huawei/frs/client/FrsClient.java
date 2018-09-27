@@ -1,14 +1,13 @@
 package com.huawei.frs.client;
 
+import com.huawei.frs.common.FrsConstant;
+import com.huawei.frs.common.ProxyHostInfo;
 import com.huawei.frs.access.FrsAccess;
 import com.huawei.frs.access.FrsAccessWithProxy;
 import com.huawei.frs.common.AuthInfo;
-import com.huawei.frs.common.FrsConstant;
-import com.huawei.frs.common.ProxyHostInfo;
 
 public class FrsClient implements AutoCloseable {
     private AuthInfo authInfo;
-    private ProxyHostInfo proxyHostInfo;
     private String projectId;
     private FrsAccess service;
     private DetectService detectService;
@@ -16,6 +15,8 @@ public class FrsClient implements AutoCloseable {
     private SearchService searchService;
     private FaceService faceService;
     private FaceSetService faceSetService;
+    private LiveDetectService liveDetectService;
+    private QualityService qualityService;
 
     private void initService() {
         this.detectService = new DetectService(this.service, this.projectId);
@@ -23,65 +24,61 @@ public class FrsClient implements AutoCloseable {
         this.searchService = new SearchService(this.service, this.projectId);
         this.faceService = new FaceService(this.service, this.projectId);
         this.faceSetService = new FaceSetService(this.service, this.projectId);
+        this.liveDetectService = new LiveDetectService(this.service, this.projectId);
+        this.qualityService = new QualityService(this.service, this.projectId);
     }
 
     public FrsClient(String ak, String sk, String projectId) {
-        this.authInfo = new AuthInfo(FrsConstant.getEndPoint(), FrsConstant.getRegion(), ak, sk);
-        this.projectId = projectId;
-        this.service = new FrsAccess(this.authInfo);
-        this.initService();
+        this.init(new AuthInfo(FrsConstant.getEndPoint(), FrsConstant.getRegion(), ak, sk), projectId, null);
     }
 
     public FrsClient(AuthInfo authInfo, String projectId) {
-        this.authInfo = authInfo;
-        this.projectId = projectId;
-        this.service = new FrsAccess(this.authInfo);
-        this.initService();
+        this.init(authInfo, projectId, null);
     }
 
     public FrsClient(String ak, String sk, String projectId, ProxyHostInfo proxyHostInfo) {
-        this.authInfo = new AuthInfo(FrsConstant.getEndPoint(), FrsConstant.getRegion(), ak, sk);
-        this.projectId = projectId;
-        this.proxyHostInfo = proxyHostInfo;
-        this.service = new FrsAccessWithProxy(this.authInfo, this.proxyHostInfo);
-        this.initService();
+        this.init(new AuthInfo(FrsConstant.getEndPoint(), FrsConstant.getRegion(), ak, sk), projectId, proxyHostInfo);
     }
 
     public FrsClient(AuthInfo authInfo, String projectId, ProxyHostInfo proxyHostInfo) {
-        this.authInfo = authInfo;
-        this.projectId = projectId;
-        this.proxyHostInfo = proxyHostInfo;
-        this.service = new FrsAccessWithProxy(this.authInfo, this.proxyHostInfo);
-        this.initService();
+        this.init(authInfo, projectId, proxyHostInfo);
     }
 
     public FrsClient(String ak, String sk, String projectId, int connectionTimeout, int connectionRequestTimeout, int socketTimeout) {
-        this.authInfo = new AuthInfo(FrsConstant.getEndPoint(), FrsConstant.getRegion(), ak, sk);
-        this.projectId = projectId;
-        this.service = new FrsAccess(this.authInfo, connectionTimeout, connectionRequestTimeout, socketTimeout);
-        this.initService();
+        this.init(new AuthInfo(FrsConstant.getEndPoint(), FrsConstant.getRegion(), ak, sk), projectId, null, connectionTimeout, connectionRequestTimeout, socketTimeout);
     }
 
     public FrsClient(AuthInfo authInfo, String projectId, int connectionTimeout, int connectionRequestTimeout, int socketTimeout) {
-        this.authInfo = authInfo;
-        this.projectId = projectId;
-        this.service = new FrsAccess(this.authInfo, connectionTimeout, connectionRequestTimeout, socketTimeout);
-        this.initService();
+        this.init(authInfo, projectId, null, connectionTimeout, connectionRequestTimeout, socketTimeout);
     }
 
     public FrsClient(String ak, String sk, String projectId, ProxyHostInfo proxyHostInfo, int connectionTimeout, int connectionRequestTimeout, int socketTimeout) {
-        this.authInfo = new AuthInfo(FrsConstant.getEndPoint(), FrsConstant.getRegion(), ak, sk);
-        this.projectId = projectId;
-        this.proxyHostInfo = proxyHostInfo;
-        this.service = new FrsAccessWithProxy(this.authInfo, this.proxyHostInfo, connectionTimeout, connectionRequestTimeout, socketTimeout);
-        this.initService();
+        this.init(new AuthInfo(FrsConstant.getEndPoint(), FrsConstant.getRegion(), ak, sk), projectId, proxyHostInfo, connectionTimeout, connectionRequestTimeout, socketTimeout);
     }
 
     public FrsClient(AuthInfo authInfo, String projectId, ProxyHostInfo proxyHostInfo, int connectionTimeout, int connectionRequestTimeout, int socketTimeout) {
+        this.init(authInfo, projectId, proxyHostInfo, connectionTimeout, connectionRequestTimeout, socketTimeout);
+    }
+
+    private void init(AuthInfo authInfo, String projectId, ProxyHostInfo proxyHostInfo) {
         this.authInfo = authInfo;
         this.projectId = projectId;
-        this.proxyHostInfo = proxyHostInfo;
-        this.service = new FrsAccessWithProxy(this.authInfo, this.proxyHostInfo, connectionTimeout, connectionRequestTimeout, socketTimeout);
+        if (null == proxyHostInfo) {
+            this.service = new FrsAccess(this.authInfo);
+        } else {
+            this.service = new FrsAccessWithProxy(this.authInfo, proxyHostInfo);
+        }
+        this.initService();
+    }
+
+    private void init(AuthInfo authInfo, String projectId, ProxyHostInfo proxyHostInfo, int connectionTimeout, int connectionRequestTimeout, int socketTimeout) {
+        this.authInfo = authInfo;
+        this.projectId = projectId;
+        if (null == proxyHostInfo) {
+            this.service = new FrsAccess(this.authInfo, connectionTimeout, connectionRequestTimeout, socketTimeout);
+        } else {
+            this.service = new FrsAccessWithProxy(this.authInfo, proxyHostInfo, connectionTimeout, connectionRequestTimeout, socketTimeout);
+        }
         this.initService();
     }
 
@@ -105,13 +102,16 @@ public class FrsClient implements AutoCloseable {
         return this.faceSetService;
     }
 
-    public void close() {
-        try {
-            this.service.close();
-            System.out.println("Closed client connection");
-        } catch (Exception var2) {
-            var2.printStackTrace();
-        }
+    public LiveDetectService getLiveDetectService() {
+        return this.liveDetectService;
     }
 
+    public QualityService getQualityService() {
+        return this.qualityService;
+    }
+
+    @Override
+    public void close() throws Exception {
+
+    }
 }

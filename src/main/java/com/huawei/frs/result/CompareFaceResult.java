@@ -35,10 +35,10 @@ public class CompareFaceResult {
     }
 
     public String toString() {
-        return String.format("{\"similarity\":%f,\"image1Face\":%s,\"image2Face\":%s}", this.similarity, this.image1Face.toString(), this.image2Face.toString());
+        return String.format("{\"image1Face\":%s,\"similarity\":%s,\"image2Face\":%s}", this.image1Face.toString(), String.valueOf(this.similarity), this.image2Face.toString());
     }
 
     public String toJSONString() {
-        return String.format("{\"similarity\":%f,\"image1_face\":%s,\"image2_face\":%s}", this.similarity, this.image1Face.toJSONString(), this.image2Face.toJSONString());
+        return String.format("{\"image1_face\":%s,\"similarity\":%s,\"image2_face\":%s}", this.image1Face.toJSONString(), String.valueOf(this.similarity), this.image2Face.toJSONString());
     }
 }

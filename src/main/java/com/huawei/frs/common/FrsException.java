@@ -2,6 +2,7 @@ package com.huawei.frs.common;
 
 public class FrsException extends Exception {
     public FrsException() {
+        super();
     }
 
     public FrsException(int httpStatusCode, String msg) {

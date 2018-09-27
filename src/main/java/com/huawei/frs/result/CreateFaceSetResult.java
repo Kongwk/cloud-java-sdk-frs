@@ -1,5 +1,6 @@
 package com.huawei.frs.result;
 
+
 import com.huawei.frs.common.FaceSet;
 
 public class CreateFaceSetResult {

@@ -15,10 +15,22 @@ public class ComplexFace extends Face {
     }
 
     public String toString() {
-        return String.format("{\"boundingBox\":%s,\"externalImageId\":\"%s\",\"faceId\":\"%s\",\"similarity\":%f}", this.boundingBox.toString(), this.externalImageId, this.faceId, this.similarity);
+        if (null == this.externalFields) {
+            return String.format("{\"boundingBox\":%s,\"similarity\":%s,\"externalImageId\":\"%s\",\"faceId\":\"%s\"}",
+                    this.boundingBox.toString(), String.valueOf(this.similarity), this.externalImageId, this.faceId);
+        } else {
+            return String.format("{\"boundingBox\":%s,\"similarity\":%s,\"externalImageId\":\"%s\",\"externalFields\":\"%s\",\"faceId\":\"%s\"}",
+                    this.boundingBox.toString(), String.valueOf(this.similarity), this.externalImageId, this.externalFields, this.faceId);
+        }
     }
 
     public String toJSONString() {
-        return String.format("{\"bounding_box\":%s,\"external_image_id\":\"%s\",\"face_id\":\"%s\",\"similarity\":%f}", this.boundingBox.toJSONString(), this.externalImageId, this.faceId, this.similarity);
+        if (null == this.externalFields) {
+            return String.format("{\"bounding_box\":%s,\"similarity\":%s,\"external_image_id\":\"%s\",\"face_id\":\"%s\"}",
+                    this.boundingBox.toJSONString(), String.valueOf(this.similarity), this.externalImageId, this.faceId);
+        } else {
+            return String.format("{\"bounding_box\":%s,\"similarity\":%s,\"external_image_id\":\"%s\",\"external_fields\":\"%s\",\"face_id\":\"%s\"}",
+                    this.boundingBox.toJSONString(), String.valueOf(this.similarity), this.externalImageId, this.externalFields, this.faceId);
+        }
     }
 }

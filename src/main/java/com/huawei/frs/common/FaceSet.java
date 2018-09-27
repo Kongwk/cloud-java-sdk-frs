@@ -6,6 +6,7 @@ public class FaceSet {
     private String faceSetName;
     private String createDate;
     private int faceSetCapacity;
+    private String externalFields;
 
     public FaceSet() {
     }
@@ -50,11 +51,27 @@ public class FaceSet {
         this.faceSetCapacity = faceSetCapacity;
     }
 
+    public String getExternalFields() {
+        return externalFields;
+    }
+
+    public void setExternalFields(String externalFields) {
+        this.externalFields = externalFields;
+    }
+
     public String toString() {
-        return String.format("{\"faceNumber\":%d,\"faceSetId\":\"%s\",\"faceSetName\":\"%s\",\"createDate\":\"%s\",\"faceSetCapacity\":%d}", this.faceNumber, this.faceSetId, this.faceSetName, this.createDate, this.faceSetCapacity);
+        if (null == faceSetId) {
+            return "{}";
+        }
+        return String.format("{\"faceNumber\":%d,\"faceSetId\":\"%s\",\"faceSetName\":\"%s\",\"createDate\":\"%s\",\"faceSetCapacity\":%d,\"externalFields\":%s}",
+                this.faceNumber, this.faceSetId, this.faceSetName, this.createDate, this.faceSetCapacity, this.externalFields);
     }
 
     public String toJSONString() {
-        return String.format("{\"face_number\":%d,\"face_set_id\":\"%s\",\"face_set_name\":\"%s\",\"create_date\":\"%s\",\"face_set_capacity\":%d}", this.faceNumber, this.faceSetId, this.faceSetName, this.createDate, this.faceSetCapacity);
+        if (null == faceSetId) {
+            return "{}";
+        }
+        return String.format("{\"face_number\":%d,\"face_set_id\":\"%s\",\"face_set_name\":\"%s\",\"create_date\":\"%s\",\"face_set_capacity\":%d,\"external_fields\":%s}",
+                this.faceNumber, this.faceSetId, this.faceSetName, this.createDate, this.faceSetCapacity, this.externalFields);
     }
 }

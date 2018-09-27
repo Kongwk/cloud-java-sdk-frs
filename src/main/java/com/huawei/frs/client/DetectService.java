@@ -1,16 +1,18 @@
 package com.huawei.frs.client;
 
+
 import com.alibaba.fastjson.JSONObject;
 import com.huawei.frs.access.FrsAccess;
-import com.huawei.frs.utils.HttpResponseUtils;
 import com.huawei.frs.common.FrsConstant;
 import com.huawei.frs.common.FrsException;
 import com.huawei.frs.common.ImageType;
 import com.huawei.frs.result.DetectFaceResult;
+import com.huawei.frs.utils.HttpResponseUtils;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.entity.StringEntity;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,13 +20,14 @@ import java.io.IOException;
 public class DetectService {
     private FrsAccess service;
     private String projectId;
+    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     DetectService(FrsAccess service, String projectId) {
         this.service = service;
         this.projectId = projectId;
     }
 
-    private DetectFaceResult detectFace(String image, ImageType imageType) throws FrsException, UnsupportedOperationException, IOException {
+    private DetectFaceResult detectFace(String image, ImageType imageType, String attributes) throws FrsException, UnsupportedOperationException, IOException {
         String uri = String.format(FrsConstant.getFaceDetectUri(), this.projectId);
         JSONObject json = new JSONObject();
         if (ImageType.BASE64 == imageType) {
@@ -33,23 +36,42 @@ public class DetectService {
             json.put("image_url", image);
         }
 
-        StringEntity stringEntity = new StringEntity(json.toJSONString(), "utf-8");
-        HttpResponse httpResponse = this.service.post(uri, stringEntity);
-        return (DetectFaceResult)HttpResponseUtils.httpResponse2Result(httpResponse, DetectFaceResult.class);
+        if (null != attributes) {
+            json.put("attributes", attributes);
+        }
+
+        RequestBody requestBody = RequestBody.create(JSON, json.toJSONString());
+        Response httpResponse = this.service.post(uri, requestBody);
+        return (DetectFaceResult) HttpResponseUtils.httpResponse2Result(httpResponse, DetectFaceResult.class);
+    }
+
+    //Base64
+    public DetectFaceResult detectFaceByBase64(String imageBase64, String attributes) throws FrsException, UnsupportedOperationException, IOException {
+        return this.detectFace(imageBase64, ImageType.BASE64, attributes);
     }
 
     public DetectFaceResult detectFaceByBase64(String imageBase64) throws FrsException, UnsupportedOperationException, IOException {
-        return this.detectFace(imageBase64, ImageType.BASE64);
+        return this.detectFaceByBase64(imageBase64, null);
     }
 
-    public DetectFaceResult detectFaceByFile(String filePath) throws FrsException, UnsupportedOperationException, IOException {
+    //File
+    public DetectFaceResult detectFaceByFile(String filePath, String attributes) throws FrsException, UnsupportedOperationException, IOException {
         File image = new File(filePath);
         byte[] fileData = FileUtils.readFileToByteArray(image);
         String imageBase64 = Base64.encodeBase64String(fileData);
-        return this.detectFace(imageBase64, ImageType.BASE64);
+        return this.detectFace(imageBase64, ImageType.BASE64, attributes);
+    }
+
+    public DetectFaceResult detectFaceByFile(String filePath) throws FrsException, UnsupportedOperationException, IOException {
+        return this.detectFaceByFile(filePath, null);
+    }
+
+    //Obs
+    public DetectFaceResult detectFaceByObsUrl(String obsUrl, String attributes) throws FrsException, UnsupportedOperationException, IOException {
+        return this.detectFace(obsUrl, ImageType.OBSURL, attributes);
     }
 
     public DetectFaceResult detectFaceByObsUrl(String obsUrl) throws FrsException, UnsupportedOperationException, IOException {
-        return this.detectFace(obsUrl, ImageType.OBSURL);
+        return this.detectFaceByObsUrl(obsUrl, null);
     }
 }

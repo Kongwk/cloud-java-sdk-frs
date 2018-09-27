@@ -1,32 +1,17 @@
 package com.huawei.frs.result;
 
-import com.huawei.frs.utils.StringUtils;
-
-import java.util.List;
 
 public class DeleteFaceResult {
-    private List<String> faceIds;
-    private String externalImageId;
+    private int faceNumber;
     private String faceSetId;
     private String faceSetName;
 
-    public DeleteFaceResult() {
+    public int getFaceNumber() {
+        return faceNumber;
     }
 
-    public List<String> getFaceIds() {
-        return this.faceIds;
-    }
-
-    public void setFaceIds(List<String> faceIds) {
-        this.faceIds = faceIds;
-    }
-
-    public String getExternalImageId() {
-        return this.externalImageId;
-    }
-
-    public void setExternalImageId(String externalImageId) {
-        this.externalImageId = externalImageId;
+    public void setFaceNumber(int faceNumber) {
+        this.faceNumber = faceNumber;
     }
 
     public String getFaceSetId() {
@@ -46,10 +31,12 @@ public class DeleteFaceResult {
     }
 
     public String toString() {
-        return String.format("{\"faceIds\":%s,\"externalImageId\":\"%s\",\"faceSetId\":\"%s\",\"faceSetName\":\"%s\"}", StringUtils.stringList2JSONString(this.faceIds), this.externalImageId, this.faceSetId, this.faceSetName);
+        return String.format("{\"faceNumber\":%d,\"faceSetId\":\"%s\",\"faceSetName\":\"%s\"}",
+                this.faceNumber, this.faceSetId, this.faceSetName);
     }
 
     public String toJSONString() {
-        return String.format("{\"face_ids\":%s,\"external_image_id\":\"%s\",\"face_set_id\":\"%s\",\"face_set_name\":\"%s\"}", StringUtils.stringList2JSONString(this.faceIds), this.externalImageId, this.faceSetId, this.faceSetName);
+        return String.format("{\"face_number\":%d,\"face_set_id\":\"%s\",\"face_set_name\":\"%s\"}",
+                this.faceNumber, this.faceSetId, this.faceSetName);
     }
 }

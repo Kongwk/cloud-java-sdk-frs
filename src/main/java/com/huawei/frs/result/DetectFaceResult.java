@@ -1,21 +1,21 @@
 package com.huawei.frs.result;
 
-import com.huawei.frs.common.SimpleFace;
 import com.huawei.frs.utils.StringUtils;
+import com.huawei.frs.common.DetectFace;
 
 import java.util.List;
 
 public class DetectFaceResult {
-    private List<SimpleFace> faces;
+    private List<DetectFace> faces;
 
     public DetectFaceResult() {
     }
 
-    public List<SimpleFace> getFaces() {
+    public List<DetectFace> getFaces() {
         return this.faces;
     }
 
-    public void setFaces(List<SimpleFace> faces) {
+    public void setFaces(List<DetectFace> faces) {
         this.faces = faces;
     }
 
